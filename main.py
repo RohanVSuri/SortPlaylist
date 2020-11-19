@@ -25,7 +25,7 @@ network = pylast.LastFMNetwork(api_key=config.lastfm_api_key, api_secret=config.
 #creating pylast object
 user = network.get_user(config.lastfm_username)
 #creating user object from pylast object
-
+omitted_songs = []
 def create_song_list():
     song_list = []
     offset=0
@@ -37,13 +37,28 @@ def create_song_list():
             break
 
         for i in range(len(response['items'])):
-            if not response['items'][i]['track']['is_local']: #omits local files, you can't add a local file to a playlist using spotipy
-                artist_name = response['items'][i]['track']['artists'][0]['name']
-                track_name = response['items'][i]['track']['name']
-                track_id = response['items'][i]['track']['id']
-                #dissecting response into diff variables
+            artist_name = response['items'][i]['track']['artists'][0]['name']
+            track_name = response['items'][i]['track']['name']
+            track_id = response['items'][i]['track']['id']
+            #dissecting response into diff variables
+
+            try:
                 playback_date = get_playback_date(artist_name=artist_name, track_name=track_name)
                 #gets last time you played the song using function created below
+            except IndexError:
+                print("The song " + track_name + " by " + artist_name +  " has never been scrobbled OR the name of the song is different in Last.fm and Spotify")
+                omitted_songs.append(track_name) 
+                #certain songs have different names in Spotify vs. Last.fm, causing nothing to be returned by get_playback_date
+                continue 
+            except:
+                print("Something else went wrong... not sure :(")
+                continue
+
+            if response['items'][i]['track']['is_local']: #omits local files, you can't add a local file to a playlist using spotipy
+                omitted_songs.append(track_name)
+                print("The song " + track_name + " by " + artist_name + "is a local file")
+                continue
+            else:
                 song_list.append(
                     {
                         "track_id" : track_id,
@@ -53,7 +68,7 @@ def create_song_list():
                     }
                     #creating list of dictionaries (one dictionary for each song)
                 )
-            print(track_name + ", " + artist_name + ", " + track_id)
+            print(track_name + ", " + artist_name + ", " + track_id + ", " playback_date)
         offset = offset + len(response['items'])
     return song_list
 
@@ -63,7 +78,9 @@ def sort_list(song_list):
     #sorts list by "DD MMM YYYY, HR:MN" format
 
 def get_playback_date(artist_name, track_name):
-    return user.get_track_scrobbles(artist=artist_name, track=track_name)[0].playback_date
+    track_scrobbles = user.get_track_scrobbles(artist=artist_name, track=track_name)
+    # print(track_scrobbles)
+    return track_scrobbles[0].playback_date
     #gets playback date using lastfm
 
 def create_playlist(sorted_list):
@@ -77,3 +94,4 @@ def create_playlist(sorted_list):
 l1 = create_song_list()
 s_l=sort_list(l1)
 create_playlist(s_l)
+print("These songs were omitted because Spotify and Last.fm did not match or were local files: " + str(omitted_songs))
