@@ -59,8 +59,6 @@ def create_song_list():
 
 def sort_list(song_list):
     sorted_list = sorted(song_list, key = lambda date: datetime.strptime(date['playback_date'], '%d %b %Y, %H:%M'))
-    pprint(sorted_list)
-    print("SOIJD")
     return sorted_list
     #sorts list by "DD MMM YYYY, HR:MN" format
 
@@ -72,14 +70,10 @@ def create_playlist(sorted_list):
     new_playlist = sp.user_playlist_create(spotify_username, "pylast x spotipy sorted by last listened")
     new_playlist_id = "spotify:playlist:" + new_playlist['id']
     #creates new playlist and gets ID
-    pprint(sorted_list)
-    print(new_playlist_id + "PLAYLIST ID")
     for i in sorted_list:
         sp.playlist_add_items(new_playlist_id, ["spotify:track:" + i['track_id']])
-        print("wooo")
         #adds every song to playlist
         
 l1 = create_song_list()
-# pprint(song_list)
 s_l=sort_list(l1)
 create_playlist(s_l)
