@@ -4,7 +4,6 @@ import pylast
 import config
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 from pprint import pprint
-from last import Last
 from datetime import datetime
 
 scope = "playlist-modify-public"
@@ -17,7 +16,7 @@ sp = spotipy.Spotify(auth_manager = SpotifyOAuth(client_id=config.spotify_client
 spotify_username = sp.me()['id']
 user_id = "spotify:user:" + spotify_username
 #creating spotipy object, creating username # user_id
-pl_id="spotify:playlist:2YSa5bqOUbzkEOzh3Lye40"
+pl_id=input("Paste in the Spotify Playlist URI here(right click playlist, share, copy Spotify URI): ")
 #paste in the spotify playlist ID that you want to sort here
 
 password_hash = pylast.md5(config.lastfm_password)
@@ -68,7 +67,7 @@ def create_song_list():
                     }
                     #creating list of dictionaries (one dictionary for each song)
                 )
-            print(track_name + ", " + artist_name + ", " + track_id + ", " playback_date)
+            print(track_name + ", " + artist_name + ", " + track_id + ", " + playback_date)
         offset = offset + len(response['items'])
     return song_list
 
@@ -94,4 +93,4 @@ def create_playlist(sorted_list):
 l1 = create_song_list()
 s_l=sort_list(l1)
 create_playlist(s_l)
-print("These songs were omitted because Spotify and Last.fm did not match or were local files: " + str(omitted_songs))
+print("These songs were omitted because Spotify and Last.fm did not match OR were local files: " + str(omitted_songs))
