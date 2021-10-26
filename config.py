@@ -1,7 +1,7 @@
-spotify_client_id="SPOTIFY CLIENT ID HERE"
-spotify_client_secret="SPOTIFY CLIENT SECRET HERE"
+spotify_client_id="c9687380ad3f48958547238bf2b8a1b7"
+spotify_client_secret="e7eaf7e7ab5d43d69184de862dcef2ce"
 
-lastfm_api_key="LASTFM API KEY HERE"
-lastfm_api_secret="LASTFM API SECRET HERE"
-lastfm_username="LASTFM USERNAME HERE"
-lastfm_password="LASTFM PASSWORD HERE"
+lastfm_api_key="6c23dceebca0bb6d5a1a9596d1727916"
+lastfm_api_secret="5b02cac34cc8661c3acf94b34b5d5e85"
+lastfm_username="rohan_277"
+lastfm_password="r6#@jovQDwGl6"

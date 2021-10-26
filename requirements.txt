@@ -1,0 +1,8 @@
+certifi
+chardet
+idna
+pylast
+requests
+six
+spotipy
+urllib3
